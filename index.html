@@ -1,0 +1,449 @@
+<!doctype html>
+<html lang="zh-TW">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MediaConvert — 純前端影音處理工具</title>
+  <meta name="description" content="免費純前端影音處理工具，支援轉檔、壓縮、分割，使用 GPU 加速，無需上傳伺服器。" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap"
+    rel="stylesheet" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <script type="module" crossorigin src="/assets/index-24zuIWHK.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-DwI9deyJ.css">
+</head>
+
+<body>
+  <div id="app">
+    <!-- Browser Check Banner -->
+    <div id="browser-check-banner" class="browser-check-banner hidden"></div>
+
+    <!-- TopBar -->
+    <header class="topbar" role="banner">
+      <div class="shell topbar-inner">
+        <div class="topbar-logo">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+            <rect width="28" height="28" rx="8" fill="url(#logoGrad)" />
+            <path d="M7 14 L14 7 L21 14 L14 21 Z" fill="white" opacity="0.9" />
+            <circle cx="14" cy="14" r="3" fill="white" />
+            <defs>
+              <linearGradient id="logoGrad" x1="0" y1="0" x2="28" y2="28">
+                <stop offset="0%" stop-color="#2e28a7" />
+                <stop offset="100%" stop-color="#6b63ff" />
+              </linearGradient>
+            </defs>
+          </svg>
+          <span class="topbar-title">MediaConvert (beta)</span>
+        </div>
+
+        <nav class="tab-nav" role="tablist" aria-label="功能選單">
+          <button class="tab-btn active" role="tab" data-tab="convert" id="tab-convert" aria-selected="true"
+            aria-controls="panel-convert">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M2 8h12M10 4l4 4-4 4M6 12l-4-4 4-4" stroke="currentColor" stroke-width="1.5"
+                stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+            <span data-i18n="tab.convert">轉檔</span>
+          </button>
+          <button class="tab-btn" role="tab" data-tab="compress" id="tab-compress" aria-selected="false"
+            aria-controls="panel-compress">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M8 2v12M4 6l4-4 4 4M4 10l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                stroke-linejoin="round" />
+            </svg>
+            <span data-i18n="tab.compress">壓縮</span>
+          </button>
+          <button class="tab-btn" role="tab" data-tab="split" id="tab-split" aria-selected="false"
+            aria-controls="panel-split">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M8 2v12M2 6h12M2 10h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                stroke-linejoin="round" />
+            </svg>
+            <span data-i18n="tab.split">分割</span>
+          </button>
+          <button class="tab-btn" role="tab" data-tab="watermark" id="tab-watermark" aria-selected="false"
+            aria-controls="panel-watermark">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9 10h.01" />
+              <path d="M15 10h.01" />
+              <path d="M12 2a8 8 0 0 0-8 8v12l3-3 3 3 3-3 3 3 3-3 3 3V10a8 8 0 0 0-8-8z" />
+            </svg>
+            <span data-i18n="tab.watermark" title="For nano banana/gemini omni flash">浮水印移除</span>
+          </button>
+        </nav>
+
+        <div class="topbar-actions">
+
+          <a
+            href="https://你的部落格網址.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="btn btn-ghost btn-sm topbar-blog-btn"
+            aria-label="前往部落格"
+          >
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"
+       aria-hidden="true">
+        <path d="M12 2C6.477 2 2 6.484 2 12.021c0 4.428 2.865 8.184 6.839 9.504
+                .5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703
+                -2.782.605-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.463-1.11-1.463
+                -.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032
+                .892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338
+                -2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688
+                -.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026
+                A9.564 9.564 0 0 1 12 6.844a9.59 9.59 0 0 1 2.504.337
+                c1.909-1.296 2.747-1.026 2.747-1.026.546 1.379.202 2.398.1 2.651
+                .64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943
+                .359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743
+                0 .267.18.578.688.48C19.138 20.2 22 16.447 22 12.021
+                22 6.484 17.522 2 12 2z"/>
+          </svg>
+            <span>github</span>
+          </a>
+          <select id="lang-select" class="lang-select" aria-label="語言選擇">
+            <option value="zh-TW">繁體中文</option>
+            <option value="zh-CN">简体中文</option>
+            <option value="en">English</option>
+            <option value="ja">日本語</option>
+          </select>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="shell main-content" role="main">
+
+      <!-- DropZone -->
+      <section class="dropzone-section" aria-label="檔案上傳">
+        <div class="dropzone hero" id="dropzone" role="button" tabindex="0" aria-label="拖曳或點擊上傳媒體檔案">
+          <div class="dropzone-inner">
+            <div class="dropzone-icon" aria-hidden="true">
+              <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+                <circle cx="24" cy="24" r="22" fill="rgba(107,99,255,0.08)" stroke="rgba(107,99,255,0.2)"
+                  stroke-width="1.5" />
+                <path d="M24 32V20M18 26l6-6 6 6" stroke="url(#dropGrad)" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round" />
+                <path d="M16 34h16" stroke="url(#dropGrad)" stroke-width="2" stroke-linecap="round" />
+                <defs>
+                  <linearGradient id="dropGrad" x1="16" y1="20" x2="32" y2="34" gradientUnits="userSpaceOnUse">
+                    <stop stop-color="#2e28a7" />
+                    <stop offset="1" stop-color="#6b63ff" />
+                  </linearGradient>
+                </defs>
+              </svg>
+            </div>
+            <p class="dropzone-title" data-i18n="dropzone.title">拖曳媒體檔案到這裡</p>
+            <p class="dropzone-sub" data-i18n="dropzone.sub">或點擊選擇檔案 · 支援 MP4、WebM、MKV、MOV、MP3、WAV、FLAC 等</p>
+            <button class="btn btn-primary dropzone-btn" id="dropzone-btn" data-i18n="dropzone.btn">選擇檔案</button>
+          </div>
+          <input type="file" id="file-input" multiple
+            accept="video/*,audio/*,image/*,.mkv,.flac,.ts,.m4a,.m4v,.ogg,.opus,.png,.jpg,.jpeg,.webp" class="hidden"
+            aria-hidden="true" />
+        </div>
+      </section>
+
+      <!-- File List -->
+      <section class="file-list-section hidden" id="file-list-section" aria-label="已選擇的檔案">
+        <div class="file-list-header">
+          <h2 class="section-title" data-i18n="files.title">已選擇的檔案</h2>
+          <div class="file-list-actions">
+            <button class="btn btn-ghost btn-sm" id="clear-files-btn" data-i18n="files.clearAll">清除全部</button>
+          </div>
+        </div>
+        <div class="file-list" id="file-list" role="list" aria-label="檔案列表"></div>
+      </section>
+
+      <!-- Feature Panels -->
+      <div class="feature-panels">
+
+        <!-- Convert Panel -->
+        <section class="panel feature-panel active" id="panel-convert" role="tabpanel" aria-labelledby="tab-convert">
+          <h2 class="panel-title" data-i18n="convert.title">轉換格式</h2>
+          <div class="panel-body">
+            <div class="field">
+              <label class="field-label" for="convert-format" data-i18n="convert.outputFormat">輸出格式</label>
+              <div class="format-grid" id="convert-format-grid">
+                <!-- Filled by JS -->
+              </div>
+            </div>
+            <div class="panel-hint" id="convert-hint" aria-live="polite"></div>
+          </div>
+          <div class="panel-footer">
+            <button class="btn btn-primary btn-full" id="convert-start-btn" disabled
+              data-i18n="convert.start">開始轉換</button>
+          </div>
+        </section>
+
+        <!-- Compress Panel -->
+        <section class="panel feature-panel hidden" id="panel-compress" role="tabpanel" aria-labelledby="tab-compress">
+          <h2 class="panel-title" data-i18n="compress.title">壓縮設定</h2>
+          <div class="panel-body">
+            <!-- Resolution -->
+            <div class="field">
+              <label class="field-label" data-i18n="compress.resolution">輸出解析度</label>
+              <div class="preset-grid" id="resolution-grid">
+                <!-- Filled by JS -->
+              </div>
+              <div class="custom-resolution hidden" id="custom-resolution">
+                <div class="custom-res-inputs">
+                  <input type="number" id="custom-width" class="custom-input" placeholder="寬 (px)" min="1" max="7680"
+                    aria-label="自訂寬度" />
+                  <span class="res-separator">×</span>
+                  <input type="number" id="custom-height" class="custom-input" placeholder="高 (px)" min="1" max="4320"
+                    aria-label="自訂高度" />
+                </div>
+              </div>
+            </div>
+            <!-- Bitrate -->
+            <div class="field">
+              <label class="field-label" data-i18n="compress.bitrate">視訊品質</label>
+              <div class="preset-grid" id="bitrate-grid">
+                <!-- Filled by JS -->
+              </div>
+              <div class="custom-bitrate hidden" id="custom-bitrate">
+                <div class="custom-res-inputs">
+                  <input type="number" id="custom-bitrate-val" class="custom-input" placeholder="數值" min="1"
+                    aria-label="自訂 bitrate 數值" />
+                  <select id="custom-bitrate-unit" class="custom-select" aria-label="Bitrate 單位">
+                    <option value="kbps">kbps</option>
+                    <option value="mbps" selected>Mbps</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <!-- Audio Bitrate -->
+            <div class="field">
+              <label class="field-label" data-i18n="compress.audioBitrate">音訊 Bitrate</label>
+              <div class="preset-grid" id="audio-bitrate-grid">
+                <!-- Filled by JS -->
+              </div>
+            </div>
+            <!-- Estimated size -->
+            <div class="estimate-card" id="estimate-card">
+              <div class="estimate-row">
+                <span data-i18n="compress.estimatedSize">預估輸出大小</span>
+                <span class="estimate-value" id="estimate-size">—</span>
+              </div>
+              <div class="estimate-row">
+                <span data-i18n="compress.originalSize">原始大小</span>
+                <span class="estimate-value" id="original-size">—</span>
+              </div>
+            </div>
+            <!-- GPU -->
+            <div class="field field-row">
+              <label class="toggle-label" for="gpu-toggle">
+                <span data-i18n="compress.gpuAccel">GPU 硬體加速</span>
+                <span class="toggle-hint" data-i18n="compress.gpuHint">若可用則優先使用 GPU 編碼</span>
+              </label>
+              <div class="toggle-wrap">
+                <input type="checkbox" id="gpu-toggle" class="toggle-input" checked role="switch" aria-checked="true" />
+                <label for="gpu-toggle" class="toggle-thumb" aria-hidden="true"></label>
+              </div>
+            </div>
+          </div>
+          <div class="panel-footer">
+            <button class="btn btn-primary btn-full" id="compress-start-btn" disabled
+              data-i18n="compress.start">開始壓縮</button>
+          </div>
+        </section>
+
+        <!-- Split Panel -->
+        <section class="panel feature-panel hidden" id="panel-split" role="tabpanel" aria-labelledby="tab-split">
+          <h2 class="panel-title" data-i18n="split.title">分割影片</h2>
+          <div class="panel-body">
+            <!-- Preview area -->
+            <div class="split-preview-wrap" id="split-preview-wrap">
+              <div class="split-preview-placeholder" id="split-preview-placeholder">
+                <svg width="40" height="40" viewBox="0 0 40 40" fill="none" aria-hidden="true">
+                  <rect width="40" height="40" rx="10" fill="rgba(107,99,255,0.08)" />
+                  <path d="M15 13l12 7-12 7V13z" fill="rgba(107,99,255,0.4)" />
+                </svg>
+                <p data-i18n="split.selectFile">請先選擇影片檔案</p>
+              </div>
+              <video id="split-video" class="split-video hidden" controls preload="metadata"
+                aria-label="分割預覽影片"></video>
+            </div>
+            <!-- Timeline -->
+            <div class="timeline-wrap hidden" id="timeline-wrap" aria-label="時間軸">
+              <div class="timeline-bar" id="timeline-bar" role="slider" aria-label="時間軸" aria-valuemin="0"
+                aria-valuemax="100">
+                <div class="timeline-played" id="timeline-played"></div>
+                <div class="timeline-segments" id="timeline-segments"></div>
+                <div class="timeline-handle start-handle" id="start-handle" role="slider" aria-label="起始點" tabindex="0">
+                </div>
+                <div class="timeline-handle end-handle" id="end-handle" role="slider" aria-label="結束點" tabindex="0">
+                </div>
+              </div>
+              <div class="timeline-times">
+                <span id="tl-current-time">0:00.000</span>
+                <span id="tl-duration">0:00.000</span>
+              </div>
+            </div>
+            <!-- Segments -->
+            <div class="split-segments" id="split-segments">
+              <!-- Filled by JS -->
+            </div>
+            <!-- Add segment button -->
+            <button class="btn btn-ghost btn-sm hidden" id="add-segment-btn" data-i18n="split.addSegment">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                <path d="M7 2v10M2 7h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+              </svg>
+              新增分割點
+            </button>
+          </div>
+          <div class="panel-footer">
+            <button class="btn btn-primary btn-full" id="split-start-btn" disabled data-i18n="split.start">開始分割</button>
+          </div>
+        </section>
+
+        <!-- Watermark Panel -->
+        <section class="panel feature-panel hidden" id="panel-watermark" role="tabpanel"
+          aria-labelledby="tab-watermark">
+          <h2 class="panel-title" data-i18n="watermark.title">浮水印移除</h2>
+          <div class="panel-body">
+            <!-- Preview area -->
+            <div class="watermark-preview-wrap" id="watermark-preview-wrap">
+              <div class="watermark-preview-placeholder" id="watermark-preview-placeholder">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <rect width="18" height="18" x="3" y="3" rx="2" ry="2" />
+                  <circle cx="9" cy="9" r="2" />
+                  <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" />
+                </svg>
+                <p data-i18n="watermark.selectFile">請先選擇影片或圖片檔案</p>
+              </div>
+              <div class="watermark-canvas-container hidden" id="watermark-canvas-container">
+                <canvas id="watermark-preview-canvas" class="watermark-preview-canvas"></canvas>
+                <button class="btn btn-ghost btn-sm watermark-zoom-btn" id="watermark-zoom-btn" title="放大預覽"
+                  data-i18n="[title]watermark.zoomPreview">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="15 3 21 3 21 9" />
+                    <polyline points="9 21 3 21 3 15" />
+                    <line x1="21" y1="3" x2="14" y2="10" />
+                    <line x1="3" y1="21" x2="10" y2="14" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <!-- Frame selection area for videos -->
+            <div class="watermark-frames-wrap hidden" id="watermark-frames-wrap">
+              <label class="field-label" data-i18n="watermark.chooseFrame">選擇影片畫面截圖來定位浮水印</label>
+              <div class="watermark-frames-list" id="watermark-frames-list">
+                <!-- Thumbnails populated by JS -->
+              </div>
+            </div>
+
+            <!-- Presets -->
+            <div class="field">
+              <label class="field-label" data-i18n="watermark.presets">快捷設定 (右邊距, 底邊距, 尺寸)</label>
+              <div class="preset-grid" id="watermark-presets-grid">
+                <!-- Preset buttons generated dynamically -->
+              </div>
+            </div>
+
+            <!-- Custom settings sliders/inputs -->
+            <div class="watermark-controls">
+              <div class="field">
+                <div class="slider-field-header">
+                  <label class="field-label" for="watermark-mr" data-i18n="watermark.marginRight">右邊距 (Margin
+                    Right)</label>
+                  <input type="number" id="watermark-mr-num" class="custom-input-val" min="0" max="2000" value="72" />
+                </div>
+                <input type="range" id="watermark-mr" class="range-input" min="0" max="1000" value="72" />
+              </div>
+
+              <div class="field">
+                <div class="slider-field-header">
+                  <label class="field-label" for="watermark-mb" data-i18n="watermark.marginBottom">底邊距 (Margin
+                    Bottom)</label>
+                  <input type="number" id="watermark-mb-num" class="custom-input-val" min="0" max="2000" value="72" />
+                </div>
+                <input type="range" id="watermark-mb" class="range-input" min="0" max="1000" value="72" />
+              </div>
+
+              <div class="field">
+                <div class="slider-field-header">
+                  <label class="field-label" for="watermark-ls" data-i18n="watermark.logoSize">浮水印尺寸 (Logo Size)</label>
+                  <input type="number" id="watermark-ls-num" class="custom-input-val" min="10" max="500" value="48" />
+                </div>
+                <input type="range" id="watermark-ls" class="range-input" min="10" max="300" value="48" />
+              </div>
+
+              <!-- JPEG/Compression correction toggle and alpha scale -->
+              <div class="field field-row">
+                <label class="toggle-label" for="watermark-jpeg-toggle">
+                  <span data-i18n="watermark.jpegCorrection">壓縮/邊緣色差修正</span>
+                  <span class="toggle-hint" data-i18n="watermark.jpegCorrectionHint">微調 Alpha 縮放係數以修補破圖與色邊 (for Gemini
+                    Omni Flash video)</span>
+                </label>
+                <div class="toggle-wrap">
+                  <input type="checkbox" id="watermark-jpeg-toggle" class="toggle-input" checked role="switch" />
+                  <label for="watermark-jpeg-toggle" class="toggle-thumb" aria-hidden="true"></label>
+                </div>
+              </div>
+
+              <div class="field" id="watermark-alpha-field">
+                <div class="slider-field-header">
+                  <label class="field-label" for="watermark-alpha" data-i18n="watermark.alphaScale">Alpha 縮放係數 (Alpha
+                    Scale)</label>
+                  <input type="number" id="watermark-alpha-num" class="custom-input-val" min="0.0" max="2.0" step="0.05"
+                    value="0.6" />
+                </div>
+                <input type="range" id="watermark-alpha" class="range-input" min="0.0" max="2.0" step="0.05"
+                  value="0.6" />
+              </div>
+            </div>
+          </div>
+          <div class="panel-footer">
+            <button class="btn btn-primary btn-full" id="watermark-start-btn" disabled
+              data-i18n="watermark.start">開始移除浮水印</button>
+          </div>
+        </section>
+
+      </div>
+
+      <!-- Job Queue -->
+      <section class="job-queue-section" id="job-queue-section" aria-label="任務佇列">
+        <div class="section-title-row">
+          <h2 class="section-title" data-i18n="queue.title">處理佇列</h2>
+          <button class="btn btn-ghost btn-sm hidden" id="clear-done-btn" data-i18n="queue.clearDone">清除已完成</button>
+        </div>
+        <div class="job-list" id="job-list" role="list" aria-label="任務列表" aria-live="polite"></div>
+        <div class="job-empty" id="job-empty">
+          <p data-i18n="queue.empty">尚無任務</p>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Preview Modal -->
+    <div class="modal-overlay hidden" id="preview-modal" role="dialog" aria-modal="true"
+      aria-labelledby="preview-modal-title">
+      <div class="modal-card">
+        <div class="modal-header">
+          <h3 class="modal-title" id="preview-modal-title" data-i18n="preview.title">預覽</h3>
+          <button class="modal-close" id="preview-modal-close" aria-label="關閉預覽">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+              <path d="M4 4l10 10M14 4L4 14" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            </svg>
+          </button>
+        </div>
+        <div class="modal-body">
+          <video id="preview-video" class="preview-video" controls preload="metadata" aria-label="媒體預覽"></video>
+          <div class="preview-meta" id="preview-meta"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toast-container" role="alert" aria-live="assertive" aria-atomic="true"></div>
+
+  </div>
+</body>
+
+</html>
